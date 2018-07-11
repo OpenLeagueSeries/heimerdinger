@@ -12,6 +12,7 @@
   "dependencies": {
     "arangojs": "^6.4.0",
     "koa": "^2.5.1",
+    "redis": "^2.8.0",
     "rxjs": "^6.2.1"
   }
 }

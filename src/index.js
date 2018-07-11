@@ -1,6 +1,9 @@
 const http2 = require('http2')
 const fs = require('fs')
-const path = require('path')
+
+const draftHandler = require('./Draft/index.js')
+const tournamentHandler = require('./Tournament/index.js')
+const userHandler = require('./User/index.js')
 
 const options = {
     key: fs.readFileSync('./certs/server.key'),
@@ -13,9 +16,27 @@ server.on('error', (err) => {
   console.log('ERROR(1):', err)
 })
 
-server.on('stream', (stream, headers) => {
-  console.log(headers)
-  stream.respond({'status': 200})
-})
+server.on('session', (session, headers) => {
 
-server.listen(420)
+ })
+
+ server.on('stream', (stream, headers) => {
+   stream.respond({
+     'content-type': 'application/json',
+     ':status': 200
+   });
+   switch(headers[':path']) {
+    case '/tournament':
+      tournamentHandler(stream, headers)
+      break;
+    case '/user':
+      userHandler(stream, headers)
+      break;
+    case '/draft':
+      draftHandler(stream, headers)
+      break;
+   }
+ })
+
+
+server.listen(4200)
