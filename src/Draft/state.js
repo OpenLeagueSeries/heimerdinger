@@ -39,6 +39,12 @@ const newDraft = (players, captains, admins) => {
     }))
   })
   client.zadd(teamArray)
+
+  const adminArray = []
+  admins.forEach((admin) => {
+    adminArray.push(JSON.stringify(admin))
+  })
+  adminArray.sadd(adminArray)
   return client
 }
 
