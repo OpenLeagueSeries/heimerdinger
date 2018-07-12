@@ -42,8 +42,12 @@ const newDraft = (players, captains, admins) => {
   admins.forEach((admin) => {
     adminArray.push(JSON.stringify(admin))
   })
+<<<<<<< HEAD
   client.sadd('admins', adminArray)
   client.sadd('events', {action: 'CREATE DRAFT', players: playerArray, teams: teamArray, admins: adminArray})
+=======
+  adminArray.sadd(adminArray)
+>>>>>>> state edit
   return client
 }
 
