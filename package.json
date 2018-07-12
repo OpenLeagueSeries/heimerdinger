@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "arangojs": "^6.4.0",
-    "redis": "^2.8.0",
+    "redis": "^2.8.0"
   }
 }
