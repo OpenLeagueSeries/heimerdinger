@@ -43,11 +43,16 @@ const newDraft = (players, captains, admins) => {
     adminArray.push(JSON.stringify(admin))
   })
 <<<<<<< HEAD
+<<<<<<< HEAD
   client.sadd('admins', adminArray)
   client.sadd('events', {action: 'CREATE DRAFT', players: playerArray, teams: teamArray, admins: adminArray})
 =======
   adminArray.sadd(adminArray)
 >>>>>>> state edit
+=======
+  client.sadd('admins', adminArray)
+  client.sadd('events', {action: 'CREATE DRAFT', players: playerArray, teams: teamArray, admins: adminArray})
+>>>>>>> promisify some redis stuff
   return client
 }
 
