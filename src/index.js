@@ -22,6 +22,7 @@ server.on('session', (session, headers) => {
  })
 
  server.on('stream', (stream, headers) => {
+<<<<<<< HEAD
   let body = '';
   stream.respond({
     'Content-Type': 'application/json',
@@ -32,14 +33,30 @@ server.on('session', (session, headers) => {
    if (headers[':method'] === 'OPTIONS') {
       stream.end();
     } else if (headers[':method'] === "POST") {
+=======
+   stream.respond({
+     'Content-Type': 'application/json',
+     ':status': 200,
+     'Access-Control-Allow-Origin': '*',
+     'Access-Control-Allow-Headers': 'content-type'
+   });
+   if (headers[':method'] === "POST") {
+    let body = '';
+>>>>>>> working stream stuff
     stream.on('data', chunk => {
       body += chunk.toString();
     });
     stream.on('end', () => {
+<<<<<<< HEAD
       draftHandler(stream, headers, JSON.parse(body))
       stream.end(JSON.stringify({ok:"ok"}));
     });
 
+=======
+      console.log(body);
+      stream.end('ok');
+    });
+>>>>>>> working stream stuff
    } else {
    switch(headers[':path']) {
     case '/tournament':

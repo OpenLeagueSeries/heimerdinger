@@ -8,6 +8,7 @@ const http2 = require('http2')
  * Bid transactions are merged into the assignment transaction after a bid is closed
  *
  * Each player bid has its own central timer that may be held by either admins or captains
+<<<<<<< HEAD
 */
 
 /*
@@ -36,6 +37,22 @@ const draftHandler = (stream, headers, body) => {
     Subscribers.delete(stream);
   })
 
+=======
+*/
+
+/*
+ * current bid state - hashmap
+ * player to be bid on list - sorted set
+ * bidders list - set (for scanning)
+*/
+
+const draftHandler = (stream, headers) => {
+
+  stream.write(JSON.stringify({array:['a']}))
+  setTimeout(function () {
+    stream.write(JSON.stringify({array:['a', 'b','c']}))
+  }, 2000);
+>>>>>>> working stream stuff
 }
 
 module.exports = draftHandler
