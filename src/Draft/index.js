@@ -16,12 +16,23 @@ const http2 = require('http2')
  * bidders list - set (for scanning)
 */
 
-const draftHandler = (stream, headers) => {
+const Subscribers = new Set()
+const draftHandler = (stream, headers, body) => {
 
-  stream.write(JSON.stringify({array:['a']}))
-  setTimeout(function () {
-    stream.write(JSON.stringify({array:['a', 'b','c']}))
-  }, 2000);
+  if (body.length === 0) {
+    stream.write(JSON.stringify({number: 34}));
+    Subscribers.has(stream) || Subscribers.add(stream);
+  } else {
+    console.log(body)
+    console.log(((body.number % 2) === 1 ? 3 * body.number + 1 : body.number / 2))
+    Subscribers.forEach((sub) => {
+      sub.write(JSON.stringify({number: (body.number%2 === 1 ? 3 * body.number + 1: body.number/2)}))
+    })
+  }
+  stream.on('end', () => {
+    Subscribers.delete(stream)
+  })
+
 }
 
 module.exports = draftHandler
