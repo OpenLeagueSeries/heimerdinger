@@ -23,12 +23,13 @@ const draftHandler = (stream, headers, body) => {
     stream.write(JSON.stringify({number: 34}));
     Subscribers.has(stream) || Subscribers.add(stream);
   } else {
-    console.log(body)
-    console.log(((body.number % 2) === 1 ? 3 * body.number + 1 : body.number / 2))
     Subscribers.forEach((sub) => {
       sub.write(JSON.stringify({number: (body.number%2 === 1 ? 3 * body.number + 1: body.number/2)}))
     })
   }
+  stream.on('error', (e) => {
+    console.log(e)
+  })
   stream.on('end', () => {
     Subscribers.delete(stream)
   })

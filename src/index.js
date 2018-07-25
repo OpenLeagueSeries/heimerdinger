@@ -23,19 +23,21 @@ server.on('session', (session, headers) => {
 
  server.on('stream', (stream, headers) => {
   let body = '';
-   stream.respond({
-     'Content-Type': 'application/json',
-     ':status': 200,
-     'Access-Control-Allow-Origin': '*',
-     'Access-Control-Allow-Headers': 'content-type'
-   });
-   if (headers[':method'] === "POST") {
+  stream.respond({
+    'Content-Type': 'application/json',
+    ':status': 200,
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'content-type'
+  });
+   if (headers[':method'] === 'OPTIONS') {
+      stream.end();
+    } else if (headers[':method'] === "POST") {
     stream.on('data', chunk => {
       body += chunk.toString();
     });
     stream.on('end', () => {
       draftHandler(stream, headers, JSON.parse(body))
-      stream.end('ok');
+      stream.end(JSON.stringify({ok:"ok"}));
     });
 
    } else {
