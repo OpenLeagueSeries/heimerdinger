@@ -22,8 +22,6 @@ server.on('session', (session, headers) => {
  })
 
  server.on('stream', (stream, headers) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
   let body = '';
   stream.respond({
     'Content-Type': 'application/json',
@@ -34,10 +32,6 @@ server.on('session', (session, headers) => {
    if (headers[':method'] === 'OPTIONS') {
       stream.end();
     } else if (headers[':method'] === "POST") {
-=======
-=======
-  let body = '';
->>>>>>> fixed a thing quick
    stream.respond({
      'Content-Type': 'application/json',
      ':status': 200,
@@ -45,33 +39,13 @@ server.on('session', (session, headers) => {
      'Access-Control-Allow-Headers': 'content-type'
    });
    if (headers[':method'] === "POST") {
-<<<<<<< HEAD
-    let body = '';
->>>>>>> working stream stuff
-=======
->>>>>>> fixed a thing quick
     stream.on('data', chunk => {
       body += chunk.toString();
     });
     stream.on('end', () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
       draftHandler(stream, headers, JSON.parse(body))
       stream.end(JSON.stringify({ok:"ok"}));
     });
-
-=======
-      console.log(body);
-      stream.end('ok');
-    });
->>>>>>> working stream stuff
-=======
-      draftHandler(stream, headers, JSON.parse(body))
-      stream.end('ok');
-    });
-
->>>>>>> fixed a thing quick
-   } else {
    switch(headers[':path']) {
     case '/tournament':
       tournamentHandler(stream, headers)
