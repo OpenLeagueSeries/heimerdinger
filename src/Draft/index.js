@@ -56,6 +56,7 @@ const draftHandler = (stream, headers, body) => {
     Subscribers.forEach((sub) => {
       sub.write(JSON.stringify({number: (body.number%2 === 1 ? 3 * body.number + 1: body.number/2)}))
     })
+    stream.end(JSON.stringify({ok:"ok"}));
   }
   stream.on('error', (e) => {
     console.log(e)
