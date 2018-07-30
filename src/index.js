@@ -1,10 +1,12 @@
 const http2 = require('http2');
 const fs = require('fs');
 
-const draftHandler = require('./Draft/index.js');
-const tournamentHandler = require('./Tournament/index.js');
-const { userHandler, registerHandler } = require('./User/index.js');
-const { parse } = require('querystring');
+import postRoutes from './postRoutes.js';
+import getRoutes from './getRoutes.js';
+
+import tournamentHandler from './Tournament/index.js';
+import userHandler from './User/index.js';
+import parse from 'querystring';
 
 const options = {
     key: fs.readFileSync('./certs/server.key'),
@@ -13,60 +15,34 @@ const options = {
 
 const server = http2.createSecureServer(options)
 
+const processPath = (pathString) => {
+  const pathSplit = pathString.split('/')
+  return {route: pathSplit[1], options: pathSplit.splice(0,2)}
+}
+
 server.on('error', (err) => {
   console.log('ERROR(1):', err);
 })
 
 server.on('session', (session, headers) => {
 
- })
+})
 
  server.on('stream', (stream, headers) => {
-  let body = '';
-  //This is for CORS requests and OPTIONS headers, covers everything
+
   stream.respond({
     'Content-Type': 'application/json',
     ':status': 200,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'content-type'
   });
-  // For OPTIONS method, we don't need anything
-   if (headers[':method'] === 'OPTIONS') {
-      stream.end();
-    } else if (headers[':method'] === "POST") {
-   stream.respond({
-     'Content-Type': 'application/json',
-     ':status': 200,
-     'Access-Control-Allow-Origin': '*',
-     'Access-Control-Allow-Headers': 'content-type'
-   });
-   if (headers[':method'] === "POST") {
-    stream.on('data', chunk => {
-      body += chunk.toString();
-    });
-    stream.on('end', () => {
-      switch(headers[':path']) {
-        case '/draft':
-          draftHandler(stream, headers, JSON.parse(body));
-          break;
-        case '/register':
-          registerHandler(stream, headers, JSON.parse(body));
-          break;
-      }
-    });
 
-  } else { // Subscription request using GET
-   switch(headers[':path']) {
-    case '/tournament':
-      tournamentHandler(stream, headers);
-      break;
-    case '/user':
-      userHandler(stream, headers);
-      break;
-    case '/draft':
-      draftHandler(stream, headers, body);
-      break;
-     }
+  if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
+      stream.end();
+  } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
+    postRoutes(stream, headers, processPath(headers[':path']))
+  } else {  //GET REQUESTS for output streams
+    getRoutes(stream, headers, processPath(headers[':path']))
    }
  })
 

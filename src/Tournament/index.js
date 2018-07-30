@@ -5,4 +5,4 @@ const tournamentHandler = (stream, headers) => {
   stream.write(JSON.stringify({this:'tournament'}))
 }
 
-module.exports = tournamentHandler
+export default tournamentHandler

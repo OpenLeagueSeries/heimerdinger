@@ -48,8 +48,7 @@ const draftHandler = (stream, headers, body) => {
 
 const Subscribers = new Set()
 const draftHandler = (stream, headers, body) => {
-
-  if (body.length === 0) {
+  if (!body) {
     stream.write(JSON.stringify({number: 34}));
     Subscribers.has(stream) || Subscribers.add(stream);
   } else {
@@ -61,7 +60,7 @@ const draftHandler = (stream, headers, body) => {
   stream.on('error', (e) => {
     console.log(e)
   })
-  stream.on('end', () => {
+  stream.on('close', () => {
     Subscribers.delete(stream)
   })
 
@@ -75,4 +74,4 @@ const draftHandler = (stream, headers, body) => {
 >>>>>>> fixed a thing quick
 }
 
-module.exports = draftHandler
+export default draftHandler
