@@ -33,7 +33,6 @@ server.on('session', (session, headers) => {
   // For OPTIONS method, we don't need anything
    if (headers[':method'] === 'OPTIONS') {
       stream.end();
-<<<<<<< HEAD
     } else if (headers[':method'] === "POST") {
    stream.respond({
      'Content-Type': 'application/json',
@@ -42,9 +41,6 @@ server.on('session', (session, headers) => {
      'Access-Control-Allow-Headers': 'content-type'
    });
    if (headers[':method'] === "POST") {
-=======
-    } else if (headers[':method'] === "POST") { // POST requests
->>>>>>> Db sort of started
     stream.on('data', chunk => {
       body += chunk.toString();
     });
@@ -58,11 +54,8 @@ server.on('session', (session, headers) => {
           break;
       }
     });
-<<<<<<< HEAD
-=======
 
   } else { // Subscription request using GET
->>>>>>> Db sort of started
    switch(headers[':path']) {
     case '/tournament':
       tournamentHandler(stream, headers);

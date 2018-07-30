@@ -1,4 +1,4 @@
-const http2 = require('http2')
+import http2 from 'http2';
 
 const tournamentHandler = (stream, headers) => {
   console.log('tournament')

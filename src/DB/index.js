@@ -1,4 +1,4 @@
-const arangojs = require("arangojs");
+import arangojs from 'arangojs';
 
 const db = new arangojs.Database();
 

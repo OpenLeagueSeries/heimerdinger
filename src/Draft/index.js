@@ -1,4 +1,4 @@
-const http2 = require('http2')
+import http2 from 'http2';
 
 /*
  * the draft handler is a player queue that allows bid transactions and then assignment transactions
