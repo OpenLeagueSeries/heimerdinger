@@ -47,7 +47,7 @@ const draftHandler = (stream, headers, body) => {
 */
 
 const Subscribers = new Set()
-const draftHandler = (stream, headers, body) => {
+const draftHandler = (stream, body, user) => {
   if (!body) {
     stream.write(JSON.stringify({number: 34}));
     Subscribers.has(stream) || Subscribers.add(stream);

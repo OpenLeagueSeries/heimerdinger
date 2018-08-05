@@ -5,17 +5,17 @@ import userHandler from './User/index.js';
 import draftHandler from './Draft/index.js';
 
 
-const getRoutes = (stream, headers, path) => {
+const getRoutes = (stream, path, user) => {
 
   switch(path.route) {
    case 'tournament':
-     tournamentHandler(stream, headers)
+     tournamentHandler(stream, user)
      break;
    case 'user':
-     userHandler(stream, headers)
+     userHandler(stream, user)
      break;
    case 'draft':
-     draftHandler(stream, headers, false)
+     draftHandler(stream, false, user)
      break;
     }
 }

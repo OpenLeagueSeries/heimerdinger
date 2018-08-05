@@ -3,7 +3,7 @@ import http2 from 'http2';
 import draftHandler from './Draft/index.js';
 import { registerHandler } from './User/index.js';
 
-const postRoutes = (stream, headers, path) => {
+const postRoutes = (stream, path, user) => {
   let body = ''
   stream.on('data', chunk => {
     body += chunk.toString();
@@ -11,10 +11,10 @@ const postRoutes = (stream, headers, path) => {
   stream.on('end', () => {
     switch(path.route) {
       case 'register':
-        registerHandler(stream, headers, JSON.parse(body));
+        registerHandler(stream, JSON.parse(body), user);
         break;
       case 'draft':
-        draftHandler(stream, headers, JSON.parse(body));
+        draftHandler(stream,  JSON.parse(body), user);
         break;
     }
   })
