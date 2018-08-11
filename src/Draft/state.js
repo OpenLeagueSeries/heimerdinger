@@ -1,4 +1,17 @@
 var redis = require("redis")
+const { promisify } = require('util')
+
+const smembersAsync = promisify(client.smembers).bind(client)
+const zrangeAsync = promisify(client.zrange).bind(client)
+/*
+    REDIS client has 3 sorted sets and 2 insertion sort sets:
+    'players' - sorted by elo/expected bid value
+    'teams' - sorted by remaining points
+    'currentBidding' = sorted by expected value
+    'admins' - user accounts with admin privileges
+    'events' = event log
+
+*/
 
 const newDraft = (players, captains, admins) => {
   const client = redis.createClient();
@@ -6,21 +19,6 @@ const newDraft = (players, captains, admins) => {
   client.on("error", function (err) {
     console.log("Error " + err);
   });
-
-  state = {
-    players: players,
-    teams: captains.map((cap) => {
-      return {
-        name: `${cap.name}'s Team`,
-        captain: cap,
-        players: [],
-        points: 0
-      }
-    }),
-    admins: admins,
-    transactions: []
-  }
-
   const playerArray = ['players']
   players.forEach((p)=> {
     playerArray.push(p.ELO)
@@ -39,9 +37,22 @@ const newDraft = (players, captains, admins) => {
     }))
   })
   client.zadd(teamArray)
+
+  const adminArray = []
+  admins.forEach((admin) => {
+    adminArray.push(JSON.stringify(admin))
+  })
+  client.sadd('admins', adminArray)
+  client.sadd('events', {action: 'CREATE DRAFT', players: playerArray, teams: teamArray, admins: adminArray})
   return client
 }
 
 const getCurrentState = (client) => {
+  smembersAsync()
+}
 
+
+module.exports = {
+  newDraft: newDraft,
+  get: getCurrentState
 }
