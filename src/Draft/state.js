@@ -1,5 +1,5 @@
-var redis = require("redis")
-const { promisify } = require('util')
+import redis from 'redis'
+import { promisify } from 'util'
 
 const smembersAsync = promisify(client.smembers).bind(client)
 const zrangeAsync = promisify(client.zrange).bind(client)

@@ -1,7 +1,20 @@
-const http2 = require('http2')
+import http2 from 'http2';
+import db from '../DB/index.js';
 
-const userHandler = (stream, headers) => {
+export const userHandler = (stream, user) => {
   stream.write(JSON.stringify({this: 'user'}))
 }
 
-module.exports = userHandler
+export const registerHandler = (stream, body, user) => {
+  db.query({
+      query: "INSERT {'name' : @name,'email' : @email} INTO User",
+      bindVars: { name: body.name, email: body.email}
+  })
+  .then((result) => {
+
+  })
+  .catch((e)=> {
+    console.log(e)
+  })
+  stream.end(JSON.stringify({ok:"ok"}));
+}
