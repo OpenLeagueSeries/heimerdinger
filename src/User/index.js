@@ -2,7 +2,13 @@ import http2 from 'http2';
 import db from '../DB/index.js';
 
 export const userHandler = (stream, user) => {
-  stream.write(JSON.stringify({this: 'user'}))
+  stream.write(JSON.stringify({userList: [
+    {id: 1, name: 'Michael Santana', ign: 'imaqtpie', isCurrentPlayer: true, notes:'', roles: 'ADC', cap_in: false},
+    {id: 2, name: 'Zacqueri Black', ign: 'Aphromoo', isCurrentPlayer: false, notes:'', roles: 'Support', cap_in: true},
+    {id: 3, name: 'Peng Yiliang', ign: 'Doublelift', isCurrentPlayer: false, notes:'', roles: 'ADC', cap_in: false},
+    {id: 4, name: 'Søren Bjerg', ign: 'Bjergsen', isCurrentPlayer: false, notes:'', roles: 'Mid', cap_in: true},
+    {id: 5, name: 'Trevor Hayes', ign: 'Stixxay', isCurrentPlayer: false, notes:'', roles: 'ADC', cap_in: false}
+  ]}))
 }
 
 export const registerHandler = (stream, body, user) => {
