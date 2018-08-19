@@ -31,7 +31,7 @@ server.on('session', (session, headers) => {
 
  server.on('stream', (stream, headers) => {
 
-  const user = Session.get(stream.session);
+  const user = Sessions.get(stream.session);
   stream.respond({
     'Content-Type': 'application/json',
     ':status': 200,
