@@ -1,5 +1,5 @@
 export default class SubscriptionWrapper {
-  let Subscribers;
+  let Subscribers = new Set();
   constructor() {
      Subscribers = new Set();
   }
