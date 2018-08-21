@@ -12,20 +12,6 @@ export const userHandler = (stream, user) => {
     {id: 5, name: 'Trevor Hayes', ign: 'Stixxay', isCurrentPlayer: false, notes:'', roles: 'ADC', cap_in: false}
   ]})
 
-  userSub.sub(stream, db.query({
-    query: "FOR u IN User RETURN u"
-  }))
-
-  userSub.sub(stream, await db.query({
-    query: "FOR u IN User RETURN u"
-  }))
-  
-  db.query({
-    query: "FOR u IN User RETURN u"
-  }).then((result) => {
-    userSub.sub(stream, result)
-  })
-
 
   stream.on('end', () => (
     userSub.unsub(stream);
@@ -33,15 +19,13 @@ export const userHandler = (stream, user) => {
 }
 
 export const registerHandler = (stream, body, user) => {
-  db.query({
-      query: "INSERT {'name' : @name,'email' : @email} INTO User",
-      bindVars: { name: body.name, email: body.email}
-  })
-  .then((result) => {
-    userSub.update(result)
-  })
-  .catch((e)=> {
-    console.log(e)
-  })
+
+  userSub.update(db.query({
+        query: "INSERT {'name' : @name,'email' : @email} INTO User",
+        bindVars: { name: body.name, email: body.email}
+  }).catch((err)=> {
+    console.log(err)
+  }))
+
   stream.end(JSON.stringify({ok:"ok"}));
 }
