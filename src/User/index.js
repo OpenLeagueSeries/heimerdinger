@@ -11,6 +11,22 @@ export const userHandler = (stream, user) => {
     {id: 4, name: 'Søren Bjerg', ign: 'Bjergsen', isCurrentPlayer: false, notes:'', roles: 'Mid', cap_in: true},
     {id: 5, name: 'Trevor Hayes', ign: 'Stixxay', isCurrentPlayer: false, notes:'', roles: 'ADC', cap_in: false}
   ]})
+
+  userSub.sub(stream, db.query({
+    query: "FOR u IN User RETURN u"
+  }))
+
+  userSub.sub(stream, await db.query({
+    query: "FOR u IN User RETURN u"
+  }))
+  
+  db.query({
+    query: "FOR u IN User RETURN u"
+  }).then((result) => {
+    userSub.sub(stream, result)
+  })
+
+
   stream.on('end', () => (
     userSub.unsub(stream);
   ))
