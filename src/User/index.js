@@ -1,6 +1,8 @@
 import http2 from 'http2';
 import db from '../DB/index.js';
+import SubscriptionWrapper from '../lib.js';
 
+const userSub = new SubscriptionWrapper();
 export const userHandler = (stream, user) => {
   stream.write(JSON.stringify({userList: [
     {id: 1, name: 'Michael Santana', ign: 'imaqtpie', isCurrentPlayer: true, notes:'', roles: 'ADC', cap_in: false},
