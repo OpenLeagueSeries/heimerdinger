@@ -8,6 +8,9 @@ export default class SubscriptionWrapper {
     p.then((d) => {
       stream.write(JSON.stringify(d));
     });
+    stream.on('end', () => (
+      this.unsub(stream);
+    ));
     return this.Subscribers.has(stream) || this.Subscribers.add(stream);
   }
 
