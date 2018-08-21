@@ -1,7 +1,6 @@
 export default class SubscriptionWrapper {
-  let Subscribers = new Set();
   constructor() {
-     Subscribers = new Set();
+     const Subscribers = new Set();
   }
 
   sub(subscriber, data) {
