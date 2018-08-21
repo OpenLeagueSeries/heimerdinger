@@ -1,24 +1,24 @@
 export default class SubscriptionWrapper {
   constructor() {
-     const Subscribers = new Set();
+     this.Subscribers = new Set();
   }
 
-  sub(subscriber, data) {
-    subscriber.write(JSON.stringify(data));
-    return Subscribers.has(stream) || Subscribers.add(stream);
+  sub(stream, data) {
+    stream.write(JSON.stringify(data));
+    return this.Subscribers.has(stream) || this.Subscribers.add(stream);
   }
 
   unsub(subscriber) {
-    Subscribers.delete(subscriber);
+    this.Subscribers.delete(subscriber);
 
-    if (Subscribers.length === 0) {
+    if (this.Subscribers.length === 0) {
       return false;
     }
     return true;
   }
 
   update(data) {
-    Subscribers.forEach((sub) => {
+    this.Subscribers.forEach((sub) => {
       sub.write(JSON.stringify(data));
     })
   }

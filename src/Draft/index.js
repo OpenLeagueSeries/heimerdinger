@@ -13,7 +13,7 @@ const draftHandler = (stream, body, user) => {
     console.log(e)
   })
   stream.on('close', () => {
-    Subscribers.delete(stream)
+    draftSub.unsub(stream)
   })
 }
 
