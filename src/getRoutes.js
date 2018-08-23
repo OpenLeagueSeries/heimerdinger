@@ -3,7 +3,7 @@ import http2 from 'http2';
 import tournamentHandler from './Tournament/index.js';
 import { userHandler } from './User/index.js';
 import draftHandler from './Draft/index.js';
-
+import { detailsHandler } from './Details/index.js';
 
 const getRoutes = (stream, path, user) => {
 
@@ -16,6 +16,9 @@ const getRoutes = (stream, path, user) => {
      break;
    case 'draft':
      draftHandler(stream, false, user)
+     break;
+    case 'details':
+     detailsHandler(stream, false, user)
      break;
     }
 }
