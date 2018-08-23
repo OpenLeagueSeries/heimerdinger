@@ -8,7 +8,9 @@ const userSub = new SubscriptionWrapper();
 export const userHandler = (stream, user) => {
   userSub.sub(stream,
     db.query(aql`FOR u IN User RETURN u`)
-    .then((arangoResponse)));
+    .then((arangoResponse) => {
+      return arangoResponse._result;
+    }));
 }
 
 export const registerHandler = (stream, body, user) => {
