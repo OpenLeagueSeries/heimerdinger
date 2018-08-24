@@ -18,7 +18,7 @@ export const Sessions = new Map();
 
 const processPath = (pathString) => {
   const pathSplit = pathString.split('/');
-  return {route: pathSplit[1], options: pathSplit.splice(0,2)};
+  return {route: pathSplit[1], options: pathSplit.splice(0,3)};
 }
 
 server.on('error', (err) => {

@@ -16,8 +16,8 @@ export const userHandler = (stream, user) => {
 export const registerHandler = (stream, body, user) => {
 
   userSub.update(db.query({
-        query: "INSERT {'name' : @name,'email' : @email} INTO User",
-        bindVars: { name: body.name, email: body.email}
+        query: "INSERT {'name' : @name,'email' : @email, 'ign' : @ign} INTO User",
+        bindVars: { name: body.name, email: body.email, ign: body.ign}
   }).catch((err)=> {
     console.log(err)
   }))
