@@ -9,9 +9,8 @@ export const detailsHandler = (stream, user, path) => {
   console.log(path);
   userDetailsSub.sub(stream,
     db.query(aql`FOR u IN User
-                 FILTER u.ign == @ign
-                RETURN u`,
-              {ign: path[0]})
+                 FILTER u.ign == ${decodeURI(path[2])}
+                RETURN u`)
     .then((arangoResponse) => {
       return arangoResponse._result;
     }));
