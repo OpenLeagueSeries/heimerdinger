@@ -3,7 +3,6 @@ import db from '../DB/index.js';
 import { aql } from 'arangojs';
 import SubscriptionWrapper from '../lib.js';
 import createMailgun from 'mailgun-js';
-import CircularJSON from 'circular-json-es6';
 
 const userSub = new SubscriptionWrapper();
 const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
