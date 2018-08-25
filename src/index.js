@@ -1,5 +1,5 @@
-const http2 = require('http2');
-const fs = require('fs');
+import fs from 'fs'
+import http2 from 'http2'
 
 import postRoutes from './postRoutes.js';
 import getRoutes from './getRoutes.js';

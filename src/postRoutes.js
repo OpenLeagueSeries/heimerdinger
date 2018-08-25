@@ -11,9 +11,11 @@ const postRoutes = (stream, path, user) => {
   stream.on('end', () => {
     switch(path.route) {
       case 'register':
+        console.log('postRoutes: register');
         registerHandler(stream, JSON.parse(body), user);
         break;
       case 'draft':
+        console.log('postRoutes: draft');
         draftHandler(stream,  JSON.parse(body), user);
         break;
     }
