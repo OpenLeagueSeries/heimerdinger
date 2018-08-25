@@ -30,17 +30,18 @@ export const registerHandler = (stream, body, user) => {
   //console.log(heck)
 
   const action = String(function (params) {
-    const db = require('@arangodb').db;
+    const rdb = require('@arangodb').db;
 
-    db._query(aql`INSERT {
+    rdb._query(aql`INSERT {
       'uuid' : ${params.heck}
       INTO AuthToken`);
-    return db._query(aql`INSERT {
+    return rdb._query(aql`INSERT {
       'name' : ${params.body.name},
       'email' : ${params.body.email},
       'ign' : ${params.body.ign}}
       INTO User`);
   })
+  console.log(action)
   userSub.update(db.transaction(
     {write: [ "User", "AuthToken" ]},
     action,
