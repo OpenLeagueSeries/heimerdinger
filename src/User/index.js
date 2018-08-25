@@ -3,9 +3,9 @@ import { aql } from 'arangojs';
 import createMailgun from 'mailgun-js';
 import uuid from 'uuid/v5'
 
-import { SubscriptionWrapper } from '../lib.js';
+import SubscriptionWrapper from '../lib.js';
 import db from '../DB/index.js';
-import registerUser from '../DB/query.js';
+import { registerUser } from '../DB/query.js';
 
 const userSub = new SubscriptionWrapper();
 const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
@@ -31,7 +31,7 @@ export const registerHandler = (stream, body, user) => {
   const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
 
   const action = registerUser
-
+  console.log(action)
   userSub.update(db.transaction(
     {write: [ "User", "AuthToken" ]},
     action,
