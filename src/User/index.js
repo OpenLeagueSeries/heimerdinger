@@ -9,7 +9,7 @@ const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
 
 export const userHandler = (stream, user) => {
   userSub.sub(stream,
-    db.query(aql`FOR u IN User RETURN u`)
+    db.query(aql`FOR u IN User RETURN u._key`)
     .then((arangoResponse) => {
       return arangoResponse._result;
     }));
@@ -17,10 +17,12 @@ export const userHandler = (stream, user) => {
 
 export const registerHandler = (stream, body, user) => {
 
-  userSub.update(db.query({
-        query: "INSERT {'name' : @name,'email' : @email, 'ign' : @ign} INTO User",
-        bindVars: { name: body.name, email: body.email, ign: body.ign}
-  }).then((result)=>{
+  userSub.update(db.query(aql`INSERT {
+    'name' : ${body.name},
+    'email' : ${body.email},
+    'ign' : ${body.ign}}
+    INTO User`
+).then((result)=>{
 		const data = {
 			from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
 			to: body.email,

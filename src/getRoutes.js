@@ -17,7 +17,8 @@ const getRoutes = (stream, path, user) => {
    case 'draft':
      draftHandler(stream, false, user)
      break;
-   case 'details':
+    case 'details':
+    console.log(path);
      detailsHandler(stream, user, path.options)
      break;
     }
