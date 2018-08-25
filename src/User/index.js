@@ -1,9 +1,11 @@
 import http2 from 'http2';
-import db from '../DB/index.js';
 import { aql } from 'arangojs';
-import SubscriptionWrapper from '../lib.js';
 import createMailgun from 'mailgun-js';
 import uuid from 'uuid/v5'
+
+import SubscriptionWrapper from '../lib.js';
+import db from '../DB/index.js';
+import registerUser from '../DB/query.js';
 
 const userSub = new SubscriptionWrapper();
 const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
@@ -25,23 +27,10 @@ export const registerHandler = (stream, body, user) => {
   create uuid, store in db (AuthToken), then send link to register createMailgun
   **/
 
-  //console.log('user/index.js: registerHandler');
+  console.log('user/index.js: registerHandler');
   const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
-  //console.log(heck)
 
-  const action = `function (params) {
-    const rdb = require('@arangodb').db;
-
-    rdb._query(aql\`INSERT {
-      'uuid' : \${params.heck}
-      INTO AuthToken\`);
-    return rdb._query(aql\`INSERT {
-      'name' : \${params.body.name},
-      'email' : \${params.body.email},
-      'ign' : \${params.body.ign}}
-      INTO User\`);
-  }))`
-  console.log(action)
+  const action = registerUser
   userSub.update(db.transaction(
     {write: [ "User", "AuthToken" ]},
     action,
