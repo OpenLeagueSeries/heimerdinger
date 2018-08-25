@@ -3,7 +3,7 @@ import { aql } from 'arangojs';
 import createMailgun from 'mailgun-js';
 import uuid from 'uuid/v5'
 
-import SubscriptionWrapper from '../lib.js';
+import { SubscriptionWrapper } from '../lib.js';
 import db from '../DB/index.js';
 import registerUser from '../DB/query.js';
 
