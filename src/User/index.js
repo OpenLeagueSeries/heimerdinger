@@ -36,6 +36,7 @@ export const registerHandler = (stream, body, user) => {
     {write: [ "User", "AuthToken" ]},
     action,
     {body, heck}).then((result)=>{
+      console.log(result);
     const data = {
       from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
       to: body.email,
