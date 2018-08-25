@@ -9,7 +9,7 @@ const userSub = new SubscriptionWrapper();
 const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
 
 export const userHandler = (stream, user) => {
-  
+
   console.log('user/index.js: userHandler');
 
   userSub.sub(stream,
@@ -21,22 +21,38 @@ export const userHandler = (stream, user) => {
 
 export const registerHandler = (stream, body, user) => {
 
-  console.log('user/index.js: registerHandler');
-  const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
-  console.log(heck)
+  /**
+  create uuid, store in db (AuthToken), then send link to register createMailgun
+  **/
 
-  userSub.update(db.query(aql`INSERT {
-    'name' : ${body.name},
-    'email' : ${body.email},
-    'ign' : ${body.ign}}
-    INTO User`
-).then((result)=>{
-		const data = {
-			from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
-			to: body.email,
-			subject: 'LoL@Pitt Registration',
-			text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: www.fish4hoes.com`
-		};
+  //console.log('user/index.js: registerHandler');
+  const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
+  //console.log(heck)
+
+  userSub.update(db.transaction({
+    collections: {
+      write: [ "User", "AuthToken" ]
+    },
+    action: function () {
+
+      db.query(aql`INSERT {
+        'name' : ${body.name},
+        'email' : ${body.email},
+        'ign' : ${body.ign}}
+        INTO User`);
+      db.query(aql`INSERT {
+        'uuid' : ${heck}
+        INTO AuthToken`);
+    }
+  }).then((result)=>{
+    const data = {
+      from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
+      to: body.email,
+      subject: 'LoL@Pitt Registration',
+      text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: www.fish4hoes.com`
+    };
+
+
     // console.log(mg);
 		// mg.messages().send(data, function (error, response) {
     //   console.log(error);
