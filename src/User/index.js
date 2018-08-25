@@ -29,22 +29,22 @@ export const registerHandler = (stream, body, user) => {
   const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
   //console.log(heck)
 
-  userSub.update(db.transaction({
-    collections: {
-      write: [ "User", "AuthToken" ]
-    },
-    action: function () {
+  const action = String(function (params) {
+    const db = require('@arangodb').db;
 
-      db.query(aql`INSERT {
-        'name' : ${body.name},
-        'email' : ${body.email},
-        'ign' : ${body.ign}}
-        INTO User`);
-      db.query(aql`INSERT {
-        'uuid' : ${heck}
-        INTO AuthToken`);
-    }
-  }).then((result)=>{
+    db._query(aql`INSERT {
+      'uuid' : ${params.heck}
+      INTO AuthToken`);
+    return db._query(aql`INSERT {
+      'name' : ${params.body.name},
+      'email' : ${params.body.email},
+      'ign' : ${params.body.ign}}
+      INTO User`);
+  })
+  userSub.update(db.transaction(
+    {write: [ "User", "AuthToken" ]},
+    action,
+    {body, heck}).then((result)=>{
     const data = {
       from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
       to: body.email,
