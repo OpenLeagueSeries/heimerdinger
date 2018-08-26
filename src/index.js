@@ -7,6 +7,7 @@ import getRoutes from './getRoutes.js';
 import tournamentHandler from './Tournament/index.js';
 import userHandler from './User/index.js';
 import parse from 'querystring';
+import cookieparser from 'cookieparser';
 
 const options = {
     key: fs.readFileSync('./certs/server.key'),
@@ -26,29 +27,31 @@ server.on('error', (err) => {
 })
 
 server.on('session', (session, headers) => {
-  Sessions.has(session) || Sessions.set(session, headers); //this is for once we receive the session token authorization
+
 })
 
  server.on('stream', (stream, headers) => {
+   const token = cookieparser.parse(String(headers.cookie)).token || null;
+   Sessions.has(stream.session) || Sessions.set(stream.session, headers);
    const user = Sessions.get(stream.session);
   const path = processPath(headers[':path']);
-   if(path.route == 'auth'){
+   if ( path.route === 'auth' ){
       stream.respond({
-      'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly',
-      'Content-Type': 'application/json',
-      ':status': 200,
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Authorization, content-type'
+        'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly; path=/ ; Expires=' + (new Date(2050, 11)).toUTCString(),
+        'Content-Type': 'application/json',
+        ':status': 200,
+        'Access-Control-Allow-Origin': headers.origin,
+        'Access-Control-Allow-Headers': 'Authorization, content-type',
+        'Access-Control-Allow-Credentials': true
       });
       stream.end({yeah:"yeah"});
-    }
-    else{
-
+    } else {
       stream.respond({
         'Content-Type': 'application/json',
         ':status': 200,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Authorization, content-type'
+        'Access-Control-Allow-Origin': headers.origin,
+        'Access-Control-Allow-Headers': 'Authorization, content-type',
+        'Access-Control-Allow-Credentials': true
       });
     }
 
