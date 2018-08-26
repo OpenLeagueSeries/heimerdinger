@@ -30,8 +30,8 @@ server.on('session', (session, headers) => {
 
 })
 
- server.on('stream', (stream, headers) => {
-   Sessions.has(stream.session) || Sessions.set(stream.session, getUserData(headers));
+ server.on('stream', async (stream, headers) => {
+   Sessions.has(stream.session) || Sessions.set(stream.session, await getUserData(headers));
    const user = Sessions.get(stream.session);
   const path = processPath(headers[':path']);
    if ( path.route === 'auth' ){
