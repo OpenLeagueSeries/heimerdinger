@@ -31,8 +31,7 @@ server.on('session', (session, headers) => {
 })
 
  server.on('stream', (stream, headers) => {
-   const token = cookieparser.parse(String(headers.cookie)).token || null;
-   Sessions.has(stream.session) || Sessions.set(stream.session, headers);
+   Sessions.has(stream.session) || Sessions.set(stream.session, getUserData(headers));
    const user = Sessions.get(stream.session);
   const path = processPath(headers[':path']);
    if ( path.route === 'auth' ){
@@ -63,6 +62,15 @@ server.on('session', (session, headers) => {
     getRoutes(stream, processPath(headers[':path']), user);
    }
  })
+
+const getUserData = (headers) => {
+  const token = cookieparser.parse(String(headers.cookie)).token;
+  if (token) {
+
+  } else {
+    return false;
+  }
+}
 
 
 server.listen(4200)
