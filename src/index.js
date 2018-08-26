@@ -32,7 +32,6 @@ server.on('session', (session, headers) => {
  server.on('stream', (stream, headers) => {
    const user = Sessions.get(stream.session);
   const path = processPath(headers[':path']);
-  //console.log(path.options);
    if(path.route == 'auth'){
       stream.respond({
       'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly',
@@ -41,7 +40,7 @@ server.on('session', (session, headers) => {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Authorization, content-type'
       });
-
+      stream.end({yeah:"yeah"});
     }
     else{
 
