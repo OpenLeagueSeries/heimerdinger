@@ -22,7 +22,6 @@ export const userHandler = (stream, user) => {
 }
 
 export const registerHandler = (stream, body, user) => {
-
   /**
   create uuid, store in db (AuthToken), then send link to register createMailgun
   **/
@@ -42,17 +41,15 @@ export const registerHandler = (stream, body, user) => {
       subject: 'LoL@Pitt Registration',
       text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: www.fish4hoes.com`
     };
-
-
-    // console.log(mg);
-		// mg.messages().send(data, function (error, response) {
-    //   console.log(error);
-    //   console.log(response);
-  	// });
+    mg.messages().send(data, function (error, response) {
+      stream.end(JSON.stringify({success:true, data: response}));
+  	});
   })
 	  .catch((err)=> {
-    console.log(err)
+      if (err.errorNum === 1210) {
+        stream.end(JSON.stringify({success:false, data: "Email already exists"}));
+      } else {
+        stream.end(JSON.stringify({success:false, data: "Server error"}));
+      }
   }))
-
-  stream.end(JSON.stringify({ok:"ok"}));
 }
