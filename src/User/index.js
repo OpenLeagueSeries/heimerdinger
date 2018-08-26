@@ -31,9 +31,8 @@ export const registerHandler = (stream, body, user) => {
   const heck = uuid("https://pitt.lol/getAuthToken", uuid.URL);
 
   const action = registerUser
-  console.log(action)
   userSub.update(db.transaction(
-    {write: [ "User", "AuthToken" ]},
+    {write: [ "User", "AuthToken", "User_AuthToken" ]},
     action,
     {body, heck}).then((result)=>{
       console.log(result);
