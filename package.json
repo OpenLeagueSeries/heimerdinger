@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "arangojs": "^6.4.0",
-    "circular-json-es6": "^2.0.2",
     "mailgun-js": "^0.20.0",
     "promisify-redis": "0.0.4",
     "redis": "^2.8.0"
