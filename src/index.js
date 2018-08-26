@@ -1,5 +1,5 @@
-const http2 = require('http2');
-const fs = require('fs');
+import fs from 'fs'
+import http2 from 'http2'
 
 import postRoutes from './postRoutes.js';
 import getRoutes from './getRoutes.js';
@@ -30,14 +30,27 @@ server.on('session', (session, headers) => {
 })
 
  server.on('stream', (stream, headers) => {
+   const user = Sessions.get(stream.session);
+  const path = processPath(headers[':path']);
+   if(path.route == 'auth'){
+      stream.respond({
+      'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly',
+      'Content-Type': 'application/json',
+      ':status': 200,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Authorization, content-type'
+      });
+      stream.end({yeah:"yeah"});
+    }
+    else{
 
-  const user = Sessions.get(stream.session);
-  stream.respond({
-    'Content-Type': 'application/json',
-    ':status': 200,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Authorization, content-type'
-  });
+      stream.respond({
+        'Content-Type': 'application/json',
+        ':status': 200,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Authorization, content-type'
+      });
+    }
 
   if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
       stream.end();

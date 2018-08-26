@@ -4,6 +4,7 @@ import tournamentHandler from './Tournament/index.js';
 import { userHandler } from './User/index.js';
 import draftHandler from './Draft/index.js';
 import { detailsHandler } from './Details/index.js';
+//import { authHandler } from './Auth/index.js';
 
 const getRoutes = (stream, path, user) => {
 
@@ -21,6 +22,7 @@ const getRoutes = (stream, path, user) => {
     console.log(path);
      detailsHandler(stream, user, path.options)
      break;
+
     }
 }
 
