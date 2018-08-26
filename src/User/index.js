@@ -48,6 +48,14 @@ export const registerHandler = (stream, body, user) => {
 	  .catch((err)=> {
       if (err.errorNum === 1210) {
         stream.end(JSON.stringify({success:false, data: "Email already exists"}));
+        const data = {
+          from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
+          to: body.email,
+          subject: 'LoL@Pitt Registration',
+          text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: www.fish4hoes.com`
+        };
+        mg.messages().send(data, function (error, response) {        
+      	});
       } else {
         stream.end(JSON.stringify({success:false, data: "Server error"}));
       }
