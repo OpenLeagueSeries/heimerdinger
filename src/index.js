@@ -35,6 +35,7 @@ server.on('session', (session, headers) => {
    const user = Sessions.get(stream.session);
   const path = processPath(headers[':path']);
    if ( path.route === 'auth' ){
+
       stream.respond({
         'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly; path=/ ; Expires=' + (new Date(2050, 11)).toUTCString(),
         'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ server.on('session', (session, headers) => {
         'Access-Control-Allow-Headers': 'Authorization, content-type',
         'Access-Control-Allow-Credentials': true
       });
-      stream.end({yeah:"yeah"});
+      stream.end(JSON.stringify({yeah:"yeah"}));
     } else {
       stream.respond({
         'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ server.on('session', (session, headers) => {
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
   if (token) {
-
+    
   } else {
     return false;
   }
