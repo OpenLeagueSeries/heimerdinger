@@ -19,7 +19,12 @@ export const detailsHandler = (stream, user, id) => {
 }
 
 export const detailsChanger = (stream, user, id, body) => {
-  userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
-  userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body));
+  if (user.id = id[0]) {
+    userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
+    userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body));
+  } else {
+    return false;
+  }
+
 
 }

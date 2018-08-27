@@ -10,17 +10,19 @@ const getRoutes = (stream, path, user) => {
 
   switch(path.route) {
    case 'tournament':
-     tournamentHandler(stream, user)
+     tournamentHandler(stream, user);
      break;
    case 'users':
-     userHandler(stream, user)
+     userHandler(stream, user);
+     break;
+   case 'me':
+     meHandler(stream, user);
      break;
    case 'draft':
-     draftHandler(stream, false, user)
+     draftHandler(stream, false, user);
      break;
-    case 'details':
-    console.log(path);
-     detailsHandler(stream, user, path.options)
+   case 'details':
+     detailsHandler(stream, user, path.options);
      break;
 
     }
