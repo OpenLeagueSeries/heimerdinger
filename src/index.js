@@ -12,8 +12,8 @@ import db from './DB/index.js';
 import { aql } from 'arangojs';
 
 const options = {
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.crt')
+    key: fs.readFileSync('/etc/letsencrypt/live/pitt.lol/fullchain.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/pitt.lol/privkey.pem')
 };
 
 const server = http2.createSecureServer(options);
