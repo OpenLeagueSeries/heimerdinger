@@ -18,7 +18,11 @@ const postRoutes = (stream, path, user) => {
         console.log('postRoutes: draft');
         draftHandler(stream,  JSON.parse(body), user);
         break;
-    }
+      case 'details':
+        console.log('postRoutes: details');
+        detailsChanger(stream, JSON.parse(body), user);
+        break;
+      }
   })
 }
 

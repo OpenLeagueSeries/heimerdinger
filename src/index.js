@@ -58,7 +58,6 @@ server.on('session', (session, headers) => {
         'Access-Control-Allow-Credentials': true
       });
     }
-console.log('sessions is '+JSON.stringify(Sessions));
   if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
       stream.end();
   } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
@@ -71,12 +70,12 @@ console.log('sessions is '+JSON.stringify(Sessions));
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
   //console.log("your token is " + token);
+  console.log(token);
   if (token) {
 
-    const userIdTemp = db.query(aql`FOR u IN AuthToken
+    return db.query(aql`FOR u IN AuthToken
                  FILTER u.gtoken == ${token}
                 RETURN u._id`)
-
                 .then(async(arangoResponse) => {
                   //console.log('your _id is '+arangoResponse._result +'which is type of '+ typeof String(arangoResponse._result));
                   const collection = db.edgeCollection('User_AuthToken');
