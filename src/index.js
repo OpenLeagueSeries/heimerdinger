@@ -33,9 +33,20 @@ server.on('session', (session, headers) => {
 })
 
  server.on('stream', async (stream, headers) => {
-   Sessions.has(stream.session) || Sessions.set(stream.session, await getUserData(headers));
+   await Promise.resolve(Sessions.has(stream.session))
+   .then((sesh)=> {
+     if (sesh) {
+       return sesh;
+     } else {
+       return getUserData(headers)
+       .then(( user ) =>
+       { Sessions.set(stream.session, user) }
+     );
+     }
+   })
    //not sure if getUserData is returning the right value or what
    const user = Sessions.get(stream.session);
+   console.log('user is ' + JSON.stringify(user));
   const path = processPath(headers[':path']);
    if ( path.route === 'auth' ){
 
@@ -50,6 +61,7 @@ server.on('session', (session, headers) => {
       Sessions.set(stream.session, await getUserData(headers));
       stream.end(JSON.stringify({yeah:"yeah"}));
     } else {
+      console.log('origin is:' + headers.origin);
       stream.respond({
         'Content-Type': 'application/json',
         ':status': 200,
@@ -70,25 +82,34 @@ server.on('session', (session, headers) => {
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
   //console.log("your token is " + token);
-  console.log(token);
   if (token) {
 
     return db.query(aql`FOR u IN AuthToken
                  FILTER u.gtoken == ${token}
                 RETURN u._id`)
-                .then(async(arangoResponse) => {
-                  //console.log('your _id is '+arangoResponse._result +'which is type of '+ typeof String(arangoResponse._result));
+                .then((arangoResponse) => {
+                  // console.log(arangoResponse)
+                  // console.log('your _id is '+arangoResponse._result +'which is type of '+ typeof String(arangoResponse._result));
                   const collection = db.edgeCollection('User_AuthToken');
-                  const edges = await collection.outEdges(String(arangoResponse._result));
+                  return collection.outEdges(String(arangoResponse._result))
+                  .then((edges) => {
+                    return db.query(aql`FOR u IN User
+                      FILTER u._id == ${edges[0]._to}
+                      RETURN u`).then((res)=> {
+                        return res._result[0];
+                      })
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
                   //console.log('edge is '+ JSON.stringify(edges));
                   //console.log('edge is '+ edges[0]._to);
-                  return edges[0]._to;
+                })
+                .catch((err) => {
+                  console.log(err);
                 });
-
-
-
   } else {
-    return false;
+    return Promise.resolve(false);
   }
 }
 

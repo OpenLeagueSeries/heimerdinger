@@ -16,12 +16,13 @@ const getRoutes = (stream, path, user) => {
      userHandler(stream, user);
      break;
    case 'me':
-     detailsHandler(stream, user, user._key);
+     detailsHandler(stream, user, [user._key]);
      break;
    case 'draft':
      draftHandler(stream, false, user);
      break;
    case 'details':
+   console.log('details: ', + path.options);
      detailsHandler(stream, user, path.options);
      break;
 

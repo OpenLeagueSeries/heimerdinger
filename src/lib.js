@@ -25,6 +25,7 @@ export default class SubscriptionWrapper {
 
   update(data) {
     Promise.resolve(data).then((d)=> {
+      console.log(d);
       this.Subscribers.forEach((sub) => {
         sub.write(JSON.stringify(d));
       })
