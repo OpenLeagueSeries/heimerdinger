@@ -27,10 +27,12 @@ export default class SubscriptionWrapper {
     Promise.resolve(data).then((d)=> {
       console.log(d);
       this.Subscribers.forEach((sub) => {
-        sub.write(JSON.stringify(d)).
-        catch((err) => {
+        try {
+          sub.write(JSON.stringify(d)).
+        }
+        catch (err) {
           this.unsub(sub);
-        });
+        }
       })
     })
   }
