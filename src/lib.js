@@ -28,7 +28,7 @@ export default class SubscriptionWrapper {
       console.log(d);
       this.Subscribers.forEach((sub) => {
         try {
-          sub.write(JSON.stringify(d)).
+          sub.write(JSON.stringify(d));
         }
         catch (err) {
           this.unsub(sub);
