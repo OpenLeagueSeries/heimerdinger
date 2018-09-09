@@ -8,12 +8,12 @@ import db from '../DB/index.js';
 import { registerUser } from '../DB/query.js';
 
 const userSub = new SubscriptionWrapper();
-const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
+const mg = createMailgun({apiKey: 'd729a9fee96e13584b3cfb837820a1b5-6b60e603-77f882b9', domain: 'mg.pitt.lol'});
 
 export const userHandler = (stream, user) => {
 
   console.log('user/index.js: userHandler');
-  
+
   userSub.sub(stream,
     db.query(aql`FOR u IN User RETURN u._key`)
     .then((arangoResponse) => {
@@ -39,7 +39,7 @@ export const registerHandler = (stream, body, user) => {
       from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
       to: body.email,
       subject: 'LoL@Pitt Registration',
-      text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: https://pitt.lol/auth/${gtoken}`
+      text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: https://pitt.lol:4200/auth/${gtoken}`
     };
     mg.messages().send(data, function (error, response) {
       stream.end(JSON.stringify({success:true, data: response}));
@@ -52,7 +52,7 @@ export const registerHandler = (stream, body, user) => {
           from: 'LoL @ Pitt <lolatpitt@mg.pitt.lol>',
           to: body.email,
           subject: 'LoL@Pitt Registration',
-          text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: https://pitt.lol/auth/${gtoken}`
+          text: `Hello, ${body.name}. Thank you for registering to play in LoL@Pitt's OLS Tournament this fall. Please go to this link in order to complete your signup: https://pitt.lol:4200/auth/${gtoken}`
         };
         mg.messages().send(data, function (error, response) {
       	});

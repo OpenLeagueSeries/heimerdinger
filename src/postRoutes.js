@@ -2,6 +2,7 @@ import http2 from 'http2';
 
 import draftHandler from './Draft/index.js';
 import { registerHandler } from './User/index.js';
+import { detailsChanger } from './Details/index.js';
 
 const postRoutes = (stream, path, user) => {
   let body = ''
@@ -18,7 +19,11 @@ const postRoutes = (stream, path, user) => {
         console.log('postRoutes: draft');
         draftHandler(stream,  JSON.parse(body), user);
         break;
-    }
+      case 'details':
+        console.log('postRoutes: details');
+        detailsChanger(stream, user, path.options, JSON.parse(body));
+        break;
+      }
   })
 }
 
