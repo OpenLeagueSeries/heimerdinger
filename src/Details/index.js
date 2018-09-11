@@ -23,6 +23,7 @@ export const detailsChanger = (stream, user, id, body) => {
     console.log(body);
     userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
     userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body, {returnNew: true}).then(update => update.new));
+    stream.end(JSON.stringify({success:true, data: "Your update has been sent out"}));
   } else {
     return false;
   }
