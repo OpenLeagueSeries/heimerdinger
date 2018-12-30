@@ -32,41 +32,48 @@ server.on('session', (session, headers) => {
 
 })
 
- server.on('stream', async (stream, headers) => {
+server.on('stream', async (stream, headers) => {
    Sessions.has(stream.session) || Sessions.set(stream.session, await getUserData(headers));
    //not sure if getUserData is returning the right value or what
    const user = Sessions.get(stream.session);
-  const path = processPath(headers[':path']);
-   if ( path.route === 'auth' ){
+   const path = processPath(headers[':path']);
 
-      stream.respond({
-        'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly; path=/ ; Expires=' + (new Date(2050, 11)).toUTCString(),
-        'Content-Type': 'application/json',
-        ':status': 200,
-        'Access-Control-Allow-Origin': headers.origin,
-        'Access-Control-Allow-Headers': 'Authorization, content-type',
-        'Access-Control-Allow-Credentials': true
-      });
-      Sessions.set(stream.session, await getUserData(headers));
-      stream.end(JSON.stringify({yeah:"yeah"}));
-    } else {
-      stream.respond({
-        'Content-Type': 'application/json',
-        ':status': 200,
-        'Access-Control-Allow-Origin': headers.origin,
-        'Access-Control-Allow-Headers': 'Authorization, content-type',
-        'Access-Control-Allow-Credentials': true
-      });
-    }
-console.log('sessions is '+JSON.stringify(Sessions));
-  if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
-      stream.end();
-  } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
-    postRoutes(stream, processPath(headers[':path']), user);
-  } else {  //GET REQUESTS for output streams
-    getRoutes(stream, processPath(headers[':path']), user);
+   // EXCEPTION PATH HANDLING
+   if ( path.route === 'auth' ){
+     returnTokenAsCookie(stream, headers, path);
+   } else {
+     // Start an event stream
+     stream.respond({
+       'Content-Type': 'text/event-stream',
+       ':status': 200,
+       'Connection': 'keep-alive',
+       'Access-Control-Allow-Origin': headers.origin,
+       'Access-Control-Allow-Headers': 'Authorization, content-type',
+       'Access-Control-Allow-Credentials': true
+     });
+   }
+
+   if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
+     stream.end();
+   } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
+     postRoutes(stream, processPath(headers[':path']), user);
+   } else {  //GET REQUESTS for output streams
+     getRoutes(stream, processPath(headers[':path']), user);
    }
  })
+
+const authPath = (stream, headers, path) => {
+  stream.respond({
+    'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly; path=/ ; Expires=' + (new Date(2050, 11)).toUTCString(),
+    'Content-Type': 'application/json',
+    ':status': 200,
+    'Access-Control-Allow-Origin': headers.origin,
+    'Access-Control-Allow-Headers': 'Authorization, content-type',
+    'Access-Control-Allow-Credentials': true
+  });
+  Sessions.set(stream.session, await getUserData(headers));
+  stream.end(JSON.stringify({yeah:"yeah"}));
+}
 
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
