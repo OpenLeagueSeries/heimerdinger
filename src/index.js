@@ -40,29 +40,42 @@ server.on('stream', async (stream, headers) => {
 
    // EXCEPTION PATH HANDLING
    if ( path.route === 'auth' ){
+     console.log('AUTH', ' : ', 'new user auth requested');
      returnTokenAsCookie(stream, headers, path);
-   } else {
-     // Start an event stream
-     stream.respond({
-       'Content-Type': 'text/event-stream',
-       ':status': 200,
-       'Connection': 'keep-alive',
-       'Access-Control-Allow-Origin': headers.origin,
-       'Access-Control-Allow-Headers': 'Authorization, content-type',
-       'Access-Control-Allow-Credentials': true
-     });
    }
 
    if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
      stream.end();
    } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
+     // make a change to a dataset
+     stream.respond({
+       'Content-Type': 'application/json',
+       ':status' : 200,
+       'Access-Control-Allow-Origin': headers.origin,
+       'Access-Control-Allow-Headers': 'Authorization, content-type',
+       'Access-Control-Allow-Credentials': true
+     })
      postRoutes(stream, processPath(headers[':path']), user);
    } else {  //GET REQUESTS for output streams
+     // start an event stream
+     stream.respond({
+       'Content-Type': 'text/event-stream',
+       ':status': 200,
+       'Access-Control-Allow-Origin': headers.origin,
+       'Access-Control-Allow-Headers': 'Authorization, content-type',
+       'Access-Control-Allow-Credentials': true
+     });
+     const keepAlive = setInterval(() => {stream.write(': keep alive \n')}, 30000);
+     console.log('STREAMSTART', ' : ', 'new event stream started ', stream.id);
+     stream.on('close', () => {
+       console.log('STREAMEND', ' : ', 'event stream ended ', stream.id);
+       clearInterval(keepAlive);
+     })
      getRoutes(stream, processPath(headers[':path']), user);
    }
  })
 
-const authPath = (stream, headers, path) => {
+const authPath = async (stream, headers, path) => {
   stream.respond({
     'Set-Cookie': 'token='+ path.options[0]+'; HttpOnly; path=/ ; Expires=' + (new Date(2050, 11)).toUTCString(),
     'Content-Type': 'application/json',
@@ -72,33 +85,28 @@ const authPath = (stream, headers, path) => {
     'Access-Control-Allow-Credentials': true
   });
   Sessions.set(stream.session, await getUserData(headers));
-  stream.end(JSON.stringify({yeah:"yeah"}));
+  stream.end(': stream complete');
 }
 
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
-  //console.log("your token is " + token);
   if (token) {
-
     const userIdTemp = db.query(aql`FOR u IN AuthToken
                  FILTER u.gtoken == ${token}
                 RETURN u._id`)
-
                 .then(async(arangoResponse) => {
-                  //console.log('your _id is '+arangoResponse._result +'which is type of '+ typeof String(arangoResponse._result));
                   const collection = db.edgeCollection('User_AuthToken');
                   const edges = await collection.outEdges(String(arangoResponse._result));
-                  //console.log('edge is '+ JSON.stringify(edges));
-                  //console.log('edge is '+ edges[0]._to);
+                  console.log('AUTH', ' : ', 'found user auth ', edges[0]._to);
                   return edges[0]._to;
                 });
-
-
-
   } else {
+    console.log('AUTH', ' : ', 'user auth failed')
     return false;
   }
 }
 
+const port = 4200
 
-server.listen(4200)
+server.listen(port)
+console.log('SERVERSTART', ' : ', 'server started on port ', port);
