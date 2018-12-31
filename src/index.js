@@ -12,8 +12,8 @@ import db from './DB/index.js';
 import { aql } from 'arangojs';
 
 const options = {
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.crt')
+    key: fs.readFileSync('./certs/localhost.key'),
+    cert: fs.readFileSync('./certs/localhost.crt')
 };
 
 const server = http2.createSecureServer(options);
