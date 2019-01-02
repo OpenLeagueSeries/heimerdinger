@@ -29,7 +29,6 @@ server.on('error', (err) => {
 })
 
 server.on('session', (session, headers) => {
-
 })
 
 server.on('stream', async (stream, headers) => {
@@ -41,7 +40,7 @@ server.on('stream', async (stream, headers) => {
    // EXCEPTION PATH HANDLING
    if ( path.route === 'auth' ){
      console.log('AUTH', ' : ', 'new user auth requested');
-     returnTokenAsCookie(stream, headers, path);
+     return authPath(stream, headers, path);
    }
 
    if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
