@@ -156,7 +156,7 @@ const newDraft = (players, captains, admins) => {
             client.zadd(['teams', this.currentBid.team.points, this.currentBid.team]);
             this.events.emit('playerWon', {player: this.currentBid.player, team: team, nextPlayer: nextPlayer.length > 0 ? nextPlayer[0] : false});
             this.currentBid = {player: nextPlayer[0], team: null, value: null, timestamp: 0, runoff: false, id: ++this.currentBid.id, confirmation: new Set()};
-            this.countdown: null;
+            this.countdown= null;
         }
       })
     },

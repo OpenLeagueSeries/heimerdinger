@@ -75,6 +75,7 @@ const draftHandler = (stream, body, user) => {
               currentDraft.confirmBid(user, body.bidID);
             }
           })
+          break;
       case 'revert': // revert a past bid
         currentDraft.isAdmin(user)
         .then((isAdmin) => {
@@ -83,6 +84,7 @@ const draftHandler = (stream, body, user) => {
             currenttDraft.revert(body.player);
           }
         })
+        break;
       case 'reset': // reset the current bid
         currentDraft.isAdmin(user)
           .then((isAdmin) => {
@@ -91,6 +93,7 @@ const draftHandler = (stream, body, user) => {
               currentDraft.resetBid()
             }
           })
+          break;
       case 'modify': // modify a player/captain/admin
         currentDraft.isAdmin(user)
         .then((isAdmin) => {
@@ -99,6 +102,7 @@ const draftHandler = (stream, body, user) => {
             currentDraft.modify(body.data);
           }
         })
+        break;
       case 'remove': // remove an entry
         currentDraft.isAdmin(user)
         .then((isAdmin) => {
@@ -107,6 +111,7 @@ const draftHandler = (stream, body, user) => {
             currentDraft.delete(body.data);
           }
         })
+        break;
       case 'add': // add an entry
         currentDraft.isAdmin(user)
           .then((isAdmin) => {
@@ -114,6 +119,7 @@ const draftHandler = (stream, body, user) => {
               currentDraft.add(body.data);
             }
           })
+          break;
       case 'overrideConfirm':
         currentDraft.isAdmin(user)
           .then((isAdmin) => {
@@ -121,6 +127,7 @@ const draftHandler = (stream, body, user) => {
               currentDraft.override(body.bidID);
             }
           })
+          break;
       case 'pause':
         currentDraft.isAdmin(user)
           .then((isAdmin) => {
@@ -129,6 +136,7 @@ const draftHandler = (stream, body, user) => {
               draftSub.fire('pause');
             }
           });
+          break;
       case 'resume':
         currentDraft.isAdmin(user)
           .then((isAdmin) => {
@@ -136,7 +144,8 @@ const draftHandler = (stream, body, user) => {
               currentDraft.resume();
               draftSub.fire('resume');
             }
-          })
+          });
+          break;
       default:
         stream.write('go away');
         break;
