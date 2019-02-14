@@ -12,12 +12,11 @@ const mg = createMailgun({apiKey: 'fornicatebrentius', domain: 'mg.pitt.lol'});
 
 export const userHandler = (stream, user) => {
 
-  console.log('user/index.js: userHandler');
-  
+  console.log('USERLIST: ', ' : ',  'returning the user list');
   userSub.sub(stream,
     db.query(aql`FOR u IN User RETURN u._key`)
     .then((arangoResponse) => {
-      return arangoResponse._result;
+      return JSON.stringify(arangoResponse._result);
     }));
 }
 
@@ -26,7 +25,7 @@ export const registerHandler = (stream, body, user) => {
   create uuid, store in db (AuthToken), then send link to register createMailgun
   **/
 
-  console.log('user/index.js: registerHandler');
+  console.log('REGISTRATION', ' : ', 'registration received');
   const gtoken = uuid(String(Math.random()*94839498288828888384721), uuid.URL);
 //console.log(gtoken);
   const action = registerUser

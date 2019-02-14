@@ -3,7 +3,7 @@ import http2 from 'http2';
 import tournamentHandler from './Tournament/index.js';
 import { userHandler } from './User/index.js';
 import draftHandler from './Draft/index.js';
-import { detailsHandler } from './Details/index.js';
+import { detailsHandler, meHandler } from './Details/index.js';
 //import { authHandler } from './Auth/index.js';
 
 const getRoutes = (stream, path, user) => {

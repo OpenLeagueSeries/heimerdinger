@@ -6,7 +6,8 @@ export default class SubscriptionWrapper {
   sub(stream, data) {
     const p = Promise.resolve(data);
     p.then((d) => {
-      stream.write(JSON.stringify(d));
+      console.log('SUBSCRIPTION', ' : ', 'starting new subscription with ', d);
+      stream.write(`data: ${d}\n\n`);
     });
     stream.on('end', () => {
       this.unsub(stream);
@@ -25,9 +26,19 @@ export default class SubscriptionWrapper {
 
   update(data) {
     Promise.resolve(data).then((d)=> {
-      this.Subscribers.forEach((sub) => {
-        sub.write(JSON.stringify(d));
-      })
+      console.log('SUBSCRIPTION', ' : ', 'updating subscription with new data', data);
+      for (let sub of this.Subscribers) {
+        sub.write(`data: ${d}\n\n`);
+      }
+    })
+  }
+
+  fire(event, data) {
+    Promise.resolve(data).then((d)=> {
+      console.log('SUBSCRIPTION', ' : ', 'updating subscription with event', event);
+      for (let sub of this.Subscribers) {
+        sub.write(`event: ${event}\ndata: ${d}\n\n`);
+      }
     })
   }
 }

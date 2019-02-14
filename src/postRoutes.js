@@ -18,6 +18,7 @@ const postRoutes = (stream, path, user) => {
         console.log('postRoutes: draft');
         draftHandler(stream,  JSON.parse(body), user);
         break;
+      
     }
   })
 }

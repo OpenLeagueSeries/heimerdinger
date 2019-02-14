@@ -14,17 +14,32 @@ export const detailsHandler = (stream, user, id) => {
                  FILTER u._key == ${id[0]}
                 RETURN u`)
     .then((arangoResponse) => {
-      return arangoResponse._result;
+      return JSON.stringify(arangoResponse._result);
+    }));
+}
+
+export const meHandler = (stream, user) => {
+  console.log('ME', ' : ', 'Me handler started', user);
+  if (!user) {
+    stream.write(': you\'re not logged in');
+    return false;
+  }
+  userDetailsSub.has(user['_id']) || userDetailsSub.set(user['id'], new SubscriptionWrapper());
+  userDetailsSub.get(user['id']).sub(stream,
+    db.query(aql`FOR u IN User
+                 FILTER u._key == ${user['id']}
+                RETURN u`)
+    .then((arangoResponse) => {
+      console.log(arangoResponse)
+      return JSON.stringify(arangoResponse._result);
     }));
 }
 
 export const detailsChanger = (stream, user, id, body) => {
   if (user.id = id[0]) {
     userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
-    userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body));
+    userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body).then((update) => JSON.stringify(update)));
   } else {
     return false;
   }
-
-
 }
