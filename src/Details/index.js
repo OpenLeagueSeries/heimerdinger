@@ -19,6 +19,7 @@ export const detailsHandler = (stream, user, id) => {
 }
 
 export const meHandler = (stream, user) => {
+  console.log('ME', ' : ', 'Me handler started', user);
   if (!user) {
     stream.write(': you\'re not logged in');
     return false;
@@ -29,6 +30,7 @@ export const meHandler = (stream, user) => {
                  FILTER u._key == ${user['id']}
                 RETURN u`)
     .then((arangoResponse) => {
+      console.log(arangoResponse)
       return JSON.stringify(arangoResponse._result);
     }));
 }

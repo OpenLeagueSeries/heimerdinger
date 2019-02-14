@@ -1,6 +1,6 @@
 import redis from 'redis'
 import { promisify } from 'util'
-import events from 'events';
+import events, { EventEmitter } from 'events';
 
 const client = redis.createClient();
 const smembersAsync = promisify(client.smembers).bind(client);

@@ -16,8 +16,12 @@ const draftHandler = (stream, body, user) => {
           return false;
         }
         console.log('DRAFTADMIN', ' : ', 'creating a new draft');
+        if (!body.players || !body.captains || !body.admins || !body.players.length > 0 || !body.captains.length > 0 || !body.admins.length > 0) {
+          console.log('DRAFT' , ' : ', 'missing core info |', body)
+          return false;
+        }
         currentDraft = draftState.newDraft(body.players, body.captains, body.admins);
-        drafttSub.fire('new', JSON.stringify(currentDraft.current()));
+        draftSub.fire('new', JSON.stringify(currentDraft.current()));
         // create event listeners
 
         // PLayer has been won event

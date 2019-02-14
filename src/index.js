@@ -4,7 +4,6 @@ import http2 from 'http2'
 import postRoutes from './postRoutes.js';
 import getRoutes from './getRoutes.js';
 
-import tournamentHandler from './Tournament/index.js';
 import userHandler from './User/index.js';
 import parse from 'querystring';
 import cookieparser from 'cookieparser';
@@ -44,6 +43,13 @@ server.on('stream', async (stream, headers) => {
    }
 
    if (headers[':method'] === 'OPTIONS') { //OPTIONS only needs the CORS response
+     stream.respond({
+       'Content-Type': 'application/json',
+       ':status' : 200,
+       'Access-Control-Allow-Origin': headers.origin,
+       'Access-Control-Allow-Headers': 'Authorization, content-type',
+       'Access-Control-Allow-Credentials': true
+     })
      stream.end();
    } else if (headers[':method'] === "POST") { //POST needs to receive data chunks
      // make a change to a dataset
@@ -96,7 +102,8 @@ const getUserData = (headers) => {
                 .then(async(arangoResponse) => {
                   const collection = db.edgeCollection('User_AuthToken');
                   const edges = await collection.outEdges(String(arangoResponse._result));
-                  console.log('AUTH', ' : ', 'found user auth ', edges[0]._to);
+                  console.log('token : ', token)
+                  console.log('AUTH', ' : ', 'found user auth ', edges);
                   return edges[0]._to;
                 });
   } else {
