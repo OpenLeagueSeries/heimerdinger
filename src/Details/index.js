@@ -24,11 +24,13 @@ export const meHandler = (stream, user) => {
     stream.write(': you\'re not logged in');
     return false;
   }
-  userDetailsSub.has(user['_id']) || userDetailsSub.set(user['id'], new SubscriptionWrapper());
-  userDetailsSub.get(user['id']).sub(stream,
+  userDetailsSub.has(user) || userDetailsSub.set(user, new SubscriptionWrapper());
+  userDetailsSub.get(user).sub(stream,
     db.query(aql`FOR u IN User
-                 FILTER u._key == ${user['id']}
-                RETURN u`)
+FILTER u._id == ${user}
+FOR ou IN Organization_User
+FILTER ou._to == ${user}
+RETURN {"name": u.name, "email": u.email, "ign": u.ign, "role" : ou.role }`)
     .then((arangoResponse) => {
       console.log(arangoResponse)
       return JSON.stringify(arangoResponse._result);

@@ -96,7 +96,7 @@ const authPath = async (stream, headers, path) => {
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
   if (token) {
-    const userIdTemp = db.query(aql`FOR u IN AuthToken
+    return db.query(aql`FOR u IN AuthToken
                  FILTER u.gtoken == ${token}
                 RETURN u._id`)
                 .then(async(arangoResponse) => {
