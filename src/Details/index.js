@@ -24,12 +24,12 @@ export const meHandler = (stream, user) => {
     stream.write(': you\'re not logged in');
     return false;
   }
-  userDetailsSub.has(user) || userDetailsSub.set(user, new SubscriptionWrapper());
-  userDetailsSub.get(user).sub(stream,
+  userDetailsSub.has(user.id) || userDetailsSub.set(user.id, new SubscriptionWrapper());
+  userDetailsSub.get(user.id).sub(stream,
     db.query(aql`FOR u IN User
-FILTER u._id == ${user}
+FILTER u._id == ${user['id']}
 FOR ou IN Organization_User
-FILTER ou._to == ${user}
+FILTER ou._to == ${user['id']}
 RETURN {"name": u.name, "email": u.email, "ign": u.ign, "role" : ou.role }`)
     .then((arangoResponse) => {
       console.log(arangoResponse)
@@ -38,9 +38,12 @@ RETURN {"name": u.name, "email": u.email, "ign": u.ign, "role" : ou.role }`)
 }
 
 export const detailsChanger = (stream, user, id, body) => {
-  if (user.id = id[0]) {
+  console.log(id)
+  console.log('user : ', user)
+  console.log(body)
+  if (user.id === id[0] || user.role === 'admin') {
     userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
-    userDetailsSub.get(id[0]).update(UserCollection.update({_key:id[0]}, body).then((update) => JSON.stringify(update)));
+    userDetailsSub.get(id[0]).update(UserCollection.update(id[0], body).then((update) => JSON.stringify(update)));
   } else {
     return false;
   }
