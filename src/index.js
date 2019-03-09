@@ -96,15 +96,17 @@ const authPath = async (stream, headers, path) => {
 const getUserData = (headers) => {
   const token = cookieparser.parse(String(headers.cookie)).token;
   if (token) {
-    const userIdTemp = db.query(aql`FOR u IN AuthToken
+    return db.query(aql`FOR u IN AuthToken
                  FILTER u.gtoken == ${token}
                 RETURN u._id`)
                 .then(async(arangoResponse) => {
                   const collection = db.edgeCollection('User_AuthToken');
-                  const edges = await collection.outEdges(String(arangoResponse._result));
-                  console.log('token : ', token)
-                  console.log('AUTH', ' : ', 'found user auth ', edges);
-                  return edges[0]._to;
+                  let edges = collection.outEdges(String(arangoResponse._result));
+                  edges = await edges;
+                  const roleCollection = db.edgeCollection('Organization_User');
+                  let roleEdges =  roleCollection.inEdges(String(edges[0]._to));
+                  roleEdges = await roleEdges;
+                  return {id: edges[0]._to, role: roleEdges[0].role};
                 });
   } else {
     console.log('AUTH', ' : ', 'user auth failed')
