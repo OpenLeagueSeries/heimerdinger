@@ -26,7 +26,7 @@ export default class SubscriptionWrapper {
 
   update(data) {
     Promise.resolve(data).then((d)=> {
-      console.log('SUBSCRIPTION', ' : ', 'updating subscription with new data', data);
+      console.log('SUBSCRIPTION', ' : ', 'updating subscription with new data', d);
       for (let sub of this.Subscribers) {
         sub.write(`data: ${d}\n\n`);
       }
