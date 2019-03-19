@@ -65,7 +65,7 @@ export const userRemover = (stream, user, id) => {
   console.log('USER REMOVE', ' : ', 'removing user ', id)
   if (user.id === id[0] || user.role === 'admin') {
     db.query(aql`FOR u in User
-        FILTER u._id == ${user['id']}
+        FILTER u._id == ${id}
         REMOVE u in User
         `).then((arangoResponse) => {
           userSub.update(db.query(aql`FOR u IN User RETURN u._key`)
