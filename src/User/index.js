@@ -61,7 +61,7 @@ export const registerHandler = (stream, body, user) => {
   }))
 }
 
-export const userRemover = (stream, user, id, body) => {
+export const userRemover = (stream, user, id) => {
   console.log('USER REMOVE', ' : ', 'removing user ', id)
   if (user.id === id[0] || user.role === 'admin') {
     db.query(aql`FOR u in User

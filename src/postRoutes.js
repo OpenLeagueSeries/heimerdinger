@@ -25,7 +25,7 @@ const postRoutes = (stream, path, user) => {
         break;
       case 'remove':
         console.log('postRoutes: remove user');
-        userRemover(stream, user, path.options, JSON.parse(body));
+        userRemover(stream, user, path.options);
 
     }
   })
