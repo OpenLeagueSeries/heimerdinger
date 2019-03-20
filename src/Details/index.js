@@ -38,9 +38,6 @@ RETURN {"name": u.name, "email": u.email, "ign": u.ign, "role" : ou.role }`)
 }
 
 export const detailsChanger = (stream, user, id, body) => {
-  console.log(id)
-  console.log('user : ', user)
-  console.log(body)
   if (user.id === id[0] || user.role === 'admin') {
     userDetailsSub.has(id[0]) || userDetailsSub.set(id[0], new SubscriptionWrapper());
     userDetailsSub.get(id[0]).update(UserCollection.update(id[0], body, {returnNew: true}).then((update) => JSON.stringify([update.new])));
