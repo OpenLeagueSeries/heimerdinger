@@ -23,7 +23,6 @@ const draftHandler = (stream, body, user) => {
         currentDraft = draftState.newDraft(body.players, body.captains, body.admins);
         draftSub.fire('new', JSON.stringify(currentDraft.current()));
         // create event listeners
-
         // PLayer has been won event
         currentDraft.events.on('playerWon', (event) => {
           console.log('DRAFT', ' : ', 'player has been won');
@@ -32,19 +31,19 @@ const draftHandler = (stream, body, user) => {
             draftSub.fire('nextBid', JSON.stringify(event.nextPlayer));
           }
         });
-
         // draft is over event
         currentDraft.events.on('drafttOver', (event) => {
           console.log('DRAFT', ' : ', 'draft is over');
           draftSub.fire('end', JSON.stringify(event));
           currentDraft = {started: false};
         });
-
         // waiting on a confirmation event
         currentDraft.events.on('waitingConfirmation', (event) => {
           console.log('DRAFT', ' : ', 'waiting on a confirmation');
           draftSub.fire('waitingConfirmation', JSON.stringify(event));
         });
+
+  
         break;
       case 'start':
         currentDraft.isAdmin(user)
@@ -57,6 +56,7 @@ const draftHandler = (stream, body, user) => {
               })
             }
           })
+          break;
       case 'bid': // bid on a player
         currentDraft.isCaptain(user)
           .then((isCaptain) => {
@@ -70,7 +70,6 @@ const draftHandler = (stream, body, user) => {
                 });
             }
           });
-
         break;
       case 'confirm': // confirm bid as received
         currentDraft.isCaptain(user)
