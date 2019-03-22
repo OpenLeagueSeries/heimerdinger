@@ -1,7 +1,7 @@
 import http2 from 'http2';
 
 import draftHandler from './Draft/index.js';
-import { registerHandler } from './User/index.js';
+import { registerHandler, userRemover } from './User/index.js';
 import { detailsChanger } from './Details/index.js';
 
 const postRoutes = (stream, path, user) => {
@@ -23,6 +23,9 @@ const postRoutes = (stream, path, user) => {
         console.log('postRoutes: edit');
         detailsChanger(stream, user, path.options, JSON.parse(body));
         break;
+      case 'remove':
+        console.log('postRoutes: remove user');
+        userRemover(stream, user, path.options);
 
     }
   })
